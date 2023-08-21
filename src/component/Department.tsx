@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
-
+import uparrow from "../assets/uparrow.png";
+import downarrow from "../assets/downarrow.png";
 interface DepartmentType {
     department: string;
     sub_departments: string[];
@@ -13,6 +14,7 @@ interface DepartmentCheck {
     sub_departments: string[];
     parent: boolean;
     child: boolean[];
+    open: boolean;
 }
 const data: DepartmentType[] = [
     {
@@ -32,7 +34,7 @@ const Department = () => {
 
     const [tampo, setTampo] = useState<boolean>(false);
     const [departmentData, setDepartmenData] = useState<DepartmentType[]>(data);
-
+    const [open, setOpen] = useState<boolean>(false);
     useEffect(() => {
         const initBool = () => {
             let temp: DepartmentCheck[] = [];
@@ -42,6 +44,7 @@ const Department = () => {
                     sub_departments: data[i].sub_departments,
                     parent: false,
                     child: [],
+                    open: false,
                 };
                 for (let j = 0; j < data[i].sub_departments.length; j++) {
                     obj.child.push(false);
@@ -114,18 +117,57 @@ const Department = () => {
         );
         setDepartmentCheckBox(temp3);
     };
+    const handleOpen = (idx: number) => {
+        let temp2: DepartmentCheck[] = departmentCheckBox.map(
+            (item: DepartmentCheck, index: number) => {
+                if (index == idx) {
+                    return { ...item, open: !item.open };
+                } else {
+                    return item;
+                }
+            }
+        );
+        setDepartmentCheckBox(temp2);
+    };
+
     return (
         <>
             <Box>
                 {
-                    <div>
+                    <div
+                        style={{
+                            padding: "25px",
+                            width: "40%",
+                            backgroundColor: "white",
+                        }}
+                    >
                         {departmentCheckBox.length > 0 &&
                             departmentCheckBox.map(
                                 (value: DepartmentCheck, idx: number) => {
                                     return (
-                                        <div key={idx}>
+                                        <div
+                                            key={idx}
+                                            style={{
+                                                marginBottom: "30px",
+                                            }}
+                                        >
                                             <div style={{ display: "flex" }}>
+                                                <img
+                                                    src={`${value.open}=== true ? ${uparrow}:${downarrow}`}
+                                                    style={{
+                                                        width: "20px",
+                                                        height: "20px",
+                                                        marginBottom: "-30px",
+
+                                                        cursor: "pointer",
+                                                    }}
+                                                    alt="loading"
+                                                    onClick={() => {
+                                                        handleOpen(idx);
+                                                    }}
+                                                />{" "}
                                                 <Checkbox
+                                                    sx={{ marginTop: "-10px" }}
                                                     checked={value?.parent}
                                                     onChange={() =>
                                                         parentClickHandler(
@@ -137,50 +179,57 @@ const Department = () => {
                                                 <p
                                                     style={{
                                                         cursor: "pointer",
+                                                        marginTop: "0px",
                                                     }}
                                                 >
                                                     {value?.department}
                                                 </p>
                                             </div>
-                                            <div style={{ marginLeft: "30px" }}>
-                                                {value?.sub_departments.map(
-                                                    (
-                                                        value1: string,
-                                                        idx1: number
-                                                    ) => {
-                                                        return (
-                                                            <div
-                                                                style={{
-                                                                    display:
-                                                                        "flex",
-                                                                }}
-                                                            >
-                                                                <Checkbox
-                                                                    checked={
-                                                                        value
-                                                                            ?.child[
-                                                                            idx1
-                                                                        ]
-                                                                    }
-                                                                    onChange={() => {
-                                                                        childClickHandler(
-                                                                            idx,
-                                                                            idx1
-                                                                        );
-                                                                    }}
-                                                                ></Checkbox>
-                                                                <p
+                                            {value.open && (
+                                                <div
+                                                    style={{
+                                                        marginLeft: "40px",
+                                                    }}
+                                                >
+                                                    {value?.sub_departments.map(
+                                                        (
+                                                            value1: string,
+                                                            idx1: number
+                                                        ) => {
+                                                            return (
+                                                                <div
                                                                     style={{
-                                                                        cursor: "pointer",
+                                                                        display:
+                                                                            "flex",
                                                                     }}
                                                                 >
-                                                                    {value1}
-                                                                </p>
-                                                            </div>
-                                                        );
-                                                    }
-                                                )}
-                                            </div>
+                                                                    <Checkbox
+                                                                        checked={
+                                                                            value
+                                                                                ?.child[
+                                                                                idx1
+                                                                            ]
+                                                                        }
+                                                                        onChange={() => {
+                                                                            childClickHandler(
+                                                                                idx,
+                                                                                idx1
+                                                                            );
+                                                                        }}
+                                                                    ></Checkbox>
+                                                                    <p
+                                                                        style={{
+                                                                            cursor: "pointer",
+                                                                        }}
+                                                                    >
+                                                                        {value1}
+                                                                    </p>
+                                                                </div>
+                                                            );
+                                                        }
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     );
                                 }

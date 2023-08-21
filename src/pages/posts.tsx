@@ -4,15 +4,18 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 import Department from "../component/Department";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-interface Post {
+interface PostData {
     userId: string;
     id: string;
     title: string;
     body: string;
 }
 const Posts = () => {
-    const [data, setData] = useState<Post[]>([]);
+    const navigate = useNavigate();
+    const [data, setData] = useState<PostData[]>([]);
 
     const columns: GridColDef[] = [
         { field: "id", headerName: "id", width: 50 },
@@ -50,8 +53,31 @@ const Posts = () => {
 
     return (
         <div style={{ backgroundColor: "#f8f4f3" }}>
-            <div style={{ height: "100px", backgroundColor: "#c6a79f" }}></div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            <div
+                style={{
+                    backgroundColor: "#c6a79f",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    padding: "30px",
+                }}
+            >
+                <Button
+                    style={{ color: "white", border: "2px solid whitesmoke" }}
+                    onClick={() => {
+                        localStorage.removeItem("userdetails");
+                        navigate("/");
+                    }}
+                >
+                    LOGOUT
+                </Button>
+            </div>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "30px",
+                }}
+            >
                 <Box
                     sx={{
                         height: "80%",
@@ -74,8 +100,14 @@ const Posts = () => {
                     />
                 </Box>
             </div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-                <Box sx={{ height: "80%", width: "50%" }}>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "30px",
+                }}
+            >
+                <Box sx={{ width: "50%" }}>
                     <Department />
                 </Box>
             </div>
