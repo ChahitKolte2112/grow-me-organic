@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 import Department from "../component/Department";
-import SubDepartment from "../component/SubDepartment";
+
 interface Post {
     userId: string;
     id: string;
@@ -49,16 +49,23 @@ const Posts = () => {
     }, []);
 
     return (
-        <>
+        <div style={{ backgroundColor: "#f8f4f3" }}>
+            <div style={{ height: "100px", backgroundColor: "#c6a79f" }}></div>
             <div style={{ display: "flex", justifyContent: "center" }}>
-                <Box sx={{ height: "80%", width: "50%" }}>
+                <Box
+                    sx={{
+                        height: "80%",
+                        width: "50%",
+                        backgroundColor: "white",
+                    }}
+                >
                     <DataGrid
                         rows={data}
                         columns={columns}
                         initialState={{
                             pagination: {
                                 paginationModel: {
-                                    pageSize: 10,
+                                    pageSize: 5,
                                 },
                             },
                         }}
@@ -72,12 +79,7 @@ const Posts = () => {
                     <Department />
                 </Box>
             </div>
-            {/* <div style={{ display: "flex", justifyContent: "center" }}>
-                <Box sx={{ height: "80%", width: "50%" }}>
-                    <SubDepartment />
-                </Box>
-            </div> */}
-        </>
+        </div>
     );
 };
 

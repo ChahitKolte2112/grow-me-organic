@@ -1,21 +1,18 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import Box from "@mui/material/Box";
-import Checkbox  from "@mui/material/Checkbox";
-
-
+import Checkbox from "@mui/material/Checkbox";
 
 interface DepartmentType {
     department: string;
     sub_departments: string[];
 }
 
-
 interface DepartmentCheck {
-    department:string,
-    sub_departments:string[],
-    parent: boolean,
-    child: boolean[]
+    department: string;
+    sub_departments: string[];
+    parent: boolean;
+    child: boolean[];
 }
 const data: DepartmentType[] = [
     {
@@ -28,23 +25,20 @@ const data: DepartmentType[] = [
     },
 ];
 
-
 const Department = () => {
-    
     const [departmentCheckBox, setDepartmentCheckBox] = useState<
         DepartmentCheck[]
     >([]);
 
-    const [tampo,setTampo] = useState<Boolean>(false);
-    const [departmentData,setDepartmenData] = useState<DepartmentType[]>(data);
+    const [tampo, setTampo] = useState<boolean>(false);
+    const [departmentData, setDepartmenData] = useState<DepartmentType[]>(data);
 
-    useEffect( () => {
-        const initBool =  () => {
+    useEffect(() => {
+        const initBool = () => {
             let temp: DepartmentCheck[] = [];
             for (let i = 0; i < data.length; i++) {
-                console.log(data[i]);
                 let obj: DepartmentCheck = {
-                    department:data[i].department,
+                    department: data[i].department,
                     sub_departments: data[i].sub_departments,
                     parent: false,
                     child: [],
@@ -54,104 +48,145 @@ const Department = () => {
                 }
                 temp.push(obj);
             }
-            console.log(temp);
+
             setDepartmentCheckBox(temp);
         };
         initBool();
-        // console.log(departmentCheckBox[0].child);
-        setTampo(true)
+
+        setTampo(true);
     }, []);
 
-    const parentClickHandler  = (checked:boolean ,idx : number,prev:boolean) =>{
-        let temp2: DepartmentCheck[] = departmentCheckBox.map((item:DepartmentCheck,index:number)=>{
-            if(index===idx){
-                let child : boolean[] = [];
-                for(let i = 0;i<item.child.length;i++) child.push(!prev);
+    const parentClickHandler = (idx: number, prev: boolean) => {
+        let temp2: DepartmentCheck[] = departmentCheckBox.map(
+            (item: DepartmentCheck, index: number) => {
+                if (index === idx) {
+                    let child: boolean[] = [];
+                    for (let i = 0; i < item.child.length; i++)
+                        child.push(!prev);
 
-                let item1 : DepartmentCheck = {...item,child:child};
-                return {...item1,parent:!prev}
-            }else{
-                return item;
+                    let item1: DepartmentCheck = { ...item, child: child };
+                    return { ...item1, parent: !prev };
+                } else {
+                    return item;
+                }
             }
-        })
+        );
         setDepartmentCheckBox(temp2);
-    }
+    };
 
-    const childClickHandler : any = (idx:number , idx1:number ,prev : boolean)=>{
+    const childClickHandler: any = (idx: number, idx1: number) => {
+        let temp2: DepartmentCheck[] = departmentCheckBox.map(
+            (item: DepartmentCheck, index: number) => {
+                if (index == idx) {
+                    let childArr: boolean[] = item.child.map(
+                        (ch: boolean, index1: number) => {
+                            if (index1 == idx1) {
+                                return !ch;
+                            } else {
+                                return ch;
+                            }
+                        }
+                    );
+                    return { ...item, child: childArr };
+                } else return item;
+            }
+        );
 
-        let temp2 : DepartmentCheck[] = departmentCheckBox.map((item:DepartmentCheck,index:number)=>{
-            if(index==idx){
-                let childArr : boolean[] = item.child.map((ch:boolean,index1:number)=>{
-                    if(index1==idx1){
-                        return !ch
-                    }else{
-                        return ch;
+        let temp3: DepartmentCheck[] = temp2.map(
+            (item: DepartmentCheck, index: number) => {
+                if (index == idx) {
+                    let count: number = 0;
+
+                    for (let i = 0; i < item.child.length; i++) {
+                        if (item.child[i] == true) count += 1;
                     }
-                })
-                return {...item,child:childArr};
+                    if (item.parent === true) {
+                        return { ...item, parent: false };
+                    }
+                    if (count == item.child.length) {
+                        return { ...item, parent: true };
+                    }
+                    return item;
+                } else {
+                    return item;
+                }
             }
-            else return item;
-        })
-
-        let temp3 : DepartmentCheck[] = temp2.map((item:DepartmentCheck,index:number)=>{
-
-            if(index==idx){
-                let count : number = 0;
-
-                for(let i =0 ;i<item.child.length;i++){
-                    if(item.child[i]==true) count+=1;
-                }
-                if(item.parent===true) {
-                    return {...item,parent:false}
-                }
-                if(count==item.child.length){
-                    return {...item,parent:true}
-                }
-                return item;
-            }else{
-                return item;
-            }
-        })
+        );
         setDepartmentCheckBox(temp3);
-
-
-    }
+    };
     return (
         <>
-            <Box>{
-                <div>
-                {departmentCheckBox.length>0 && departmentCheckBox.map((value: DepartmentCheck, idx: number) => {
-                    return (
-                        <div key={idx}>
-                            <div style={{display:"flex"}}>
-                                <Checkbox checked = {value?.parent} onChange={(checked:boolean)=>parentClickHandler(checked,idx,value.parent)}></Checkbox>
-                                {" "}
-                                <p
-                                    style={{
-                                        cursor:"pointer"
-                                    }}
-                                >
-                                    {value?.department }
-                                </p>
-                            </div>
-                            <div style={{marginLeft:"30px"}}>
-                                {value?.sub_departments.map(
-                                    (value1: string, idx1: number) => {
-                                        return <div
-                                        style={{display:"flex"}}
-                                        >
-                                            <Checkbox checked = {value?.child[idx1]}></Checkbox>
-                                            <p style={{cursor:"pointer"}} onClick={()=>{ childClickHandler(idx,idx1,value?.child[idx1] )}}>{value1}</p>        
-                                        </div>;
-                                    }
-                                )}
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
+            <Box>
+                {
+                    <div>
+                        {departmentCheckBox.length > 0 &&
+                            departmentCheckBox.map(
+                                (value: DepartmentCheck, idx: number) => {
+                                    return (
+                                        <div key={idx}>
+                                            <div style={{ display: "flex" }}>
+                                                <Checkbox
+                                                    checked={value?.parent}
+                                                    onChange={() =>
+                                                        parentClickHandler(
+                                                            idx,
+                                                            value.parent
+                                                        )
+                                                    }
+                                                ></Checkbox>
+                                                <p
+                                                    style={{
+                                                        cursor: "pointer",
+                                                    }}
+                                                >
+                                                    {value?.department}
+                                                </p>
+                                            </div>
+                                            <div style={{ marginLeft: "30px" }}>
+                                                {value?.sub_departments.map(
+                                                    (
+                                                        value1: string,
+                                                        idx1: number
+                                                    ) => {
+                                                        return (
+                                                            <div
+                                                                style={{
+                                                                    display:
+                                                                        "flex",
+                                                                }}
+                                                            >
+                                                                <Checkbox
+                                                                    checked={
+                                                                        value
+                                                                            ?.child[
+                                                                            idx1
+                                                                        ]
+                                                                    }
+                                                                    onChange={() => {
+                                                                        childClickHandler(
+                                                                            idx,
+                                                                            idx1
+                                                                        );
+                                                                    }}
+                                                                ></Checkbox>
+                                                                <p
+                                                                    style={{
+                                                                        cursor: "pointer",
+                                                                    }}
+                                                                >
+                                                                    {value1}
+                                                                </p>
+                                                            </div>
+                                                        );
+                                                    }
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                            )}
+                    </div>
                 }
-               
             </Box>
         </>
     );
