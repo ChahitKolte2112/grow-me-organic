@@ -1,60 +1,59 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Button, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-
-interface FormData {
-    email : string,
-    password:string,
-    mobilenumber:string,
-}
-
-interface ErrorForm {
-    email : boolean,
-    password:boolean,
-    mobilenumber:boolean
-}
-
+import { Person,ErrorForm } from "../utils/interfaces";
 
 const Login = () => {
     const navigate = useNavigate();
-  
-
-    const [formdata,setFormData] = useState<FormData>({email:"",password:"",mobilenumber:""});
-    const [errorData,setErrorData] = useState<ErrorForm>({email:false,password:false,mobilenumber:false})
+    const [formdata, setFormData] = useState<Person>({
+        email: "",
+        name: "",
+        mobilenumber: "",
+    });
+    const [errorData, setErrorData] = useState<ErrorForm>({
+        email: false,
+        name: false,
+        mobilenumber: false,
+    });
 
     const changeHandler = (e: any) => {
-        setFormData({...formdata,[e.target.name]:e.target.value});
-        setErrorData({...errorData,[e.target.name]:false});
+        setFormData({ ...formdata, [e.target.name]: e.target.value });
+        setErrorData({ ...errorData, [e.target.name]: false });
     };
-    const handleSubmit =  (event: any) => {
+    const handleSubmit = (event: any) => {
         event.preventDefault();
-
-        let temp : ErrorForm = {email:false,password:false,mobilenumber:false}
+        let temp: ErrorForm = {
+            email: false,
+            name: false,
+            mobilenumber: false,
+        };
         if (formdata.email === "") {
-            temp = {...temp,email:true};
+            temp = { ...temp, email: true };
         }
-       
-        if (formdata.password === "" ) {
-            temp = {...temp,password:true};
+
+        if (formdata.name === "") {
+            temp = { ...temp, name: true };
         }
-        if (formdata.mobilenumber === "" || formdata.mobilenumber.length !== 10) {
-            temp = {...temp,mobilenumber:true};
+        if (
+            formdata.mobilenumber === "" ||
+            formdata.mobilenumber.length !== 10
+        ) {
+            temp = { ...temp, mobilenumber: true };
         }
 
         setErrorData(temp);
-       
-        if (formdata.email && formdata.password && formdata.mobilenumber) {
-            let details: FormData = {
-                email: formdata.email,
-                password: formdata.password,
-                mobilenumber: formdata.mobilenumber,
-            };
-            let jsonobj = JSON.stringify({email:details?.email,mobilenumber:details?.mobilenumber});
+
+        if (
+            formdata.email &&
+            formdata.name &&
+            formdata.mobilenumber &&
+            formdata.mobilenumber.length === 10
+        ) {
+            
+            let jsonobj = JSON.stringify(formdata);
             localStorage.setItem("userdetails", jsonobj);
             navigate("/home");
         }
-        console.log(errorData)
     };
     useEffect(() => {
         if (localStorage.getItem("userdetails")) {
@@ -62,7 +61,7 @@ const Login = () => {
         }
     }, []);
     return (
-        <React.Fragment>
+        <>
             <Box
                 sx={{
                     display: "flex",
@@ -88,8 +87,21 @@ const Login = () => {
                                 textAlign: "center",
                             }}
                         >
-                            Login Form
+                            Details{" "}
                         </h2>
+                        <TextField
+                            placeholder="Name"
+                            onChange={changeHandler}
+                            variant="outlined"
+                            color="secondary"
+                            type="text"
+                            name="name"
+                            value={formdata.name}
+                            error={errorData.name}
+                            fullWidth
+                            sx={{ mb: 3 }}
+                            helperText={errorData.name && "Enter valid name"}
+                        />
                         <TextField
                             placeholder="Email"
                             name="email"
@@ -100,6 +112,10 @@ const Login = () => {
                             fullWidth
                             value={formdata.email}
                             error={errorData.email}
+                            helperText={
+                                errorData.email &&
+                                "Please enter the valid email address"
+                            }
                         />
                         <TextField
                             placeholder="Mobile.No"
@@ -113,19 +129,12 @@ const Login = () => {
                             sx={{
                                 mb: 3,
                             }}
+                            helperText={
+                                errorData.mobilenumber &&
+                                "Enter 10 digit mobile number"
+                            }
                         />
-                        <TextField
-                            placeholder="Password"
-                            onChange={changeHandler}
-                            variant="outlined"
-                            color="secondary"
-                            type="password"
-                            name="password"
-                            value={formdata.password}
-                            error={errorData.password}
-                            fullWidth
-                            sx={{ mb: 3 }}
-                        />
+
                         <div
                             style={{
                                 display: "flex",
@@ -139,7 +148,7 @@ const Login = () => {
                                     height: "40px",
                                     borderRadius: 1,
                                     padding: "10px 10px",
-                                    fontSize: "20px",
+                                    fontSize: "18px",
                                 }}
                                 style={{
                                     backgroundColor: "black",
@@ -147,13 +156,13 @@ const Login = () => {
                                 variant="contained"
                                 type="submit"
                             >
-                                Login
+                                Submit Details
                             </Button>
                         </div>
                     </form>
                 </Box>
             </Box>
-        </React.Fragment>
+        </>
     );
 };
 
