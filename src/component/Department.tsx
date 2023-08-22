@@ -124,12 +124,14 @@ const Department = () => {
 
     return (
         <>
-            <Box >
+            <Box sx={{width:"100%"}} >
                 {
                     <div
                         style={{
-                            padding: "25px",
-                            width: "40%",
+                            boxSizing:"border-box",
+                            padding:"20px",
+                    
+                            width: "100%",
                             backgroundColor: "white",
                         }}
                     >

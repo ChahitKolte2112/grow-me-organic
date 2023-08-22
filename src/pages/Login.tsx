@@ -1,62 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+
+interface FormData {
+    email : string,
+    password:string,
+    mobilenumber:string,
+}
+
+interface ErrorForm {
+    email : boolean,
+    password:boolean,
+    mobilenumber:boolean
+}
+
+
 const Login = () => {
     const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [mobilenumber, setMobilenumber] = useState("");
-    const [mobilenumbererror, setMobilenumberError] = useState(false);
-    const [emailError, setEmailError] = useState(false);
-    const [passwordError, setPasswordError] = useState(false);
+  
+
+    const [formdata,setFormData] = useState<FormData>({email:"",password:"",mobilenumber:""});
+    const [errorData,setErrorData] = useState<ErrorForm>({email:false,password:false,mobilenumber:false})
 
     const changeHandler = (e: any) => {
-        if (e.target.name === "email") {
-            setEmail(e.target.value);
-            setEmailError(false);
-        }
-        if (e.target.name === "password") {
-            setPassword(e.target.value);
-            setPasswordError(false);
-        }
-        if (e.target.name === "mobilenumber") {
-            setMobilenumber(e.target.value);
-            setMobilenumberError(false);
-        }
+        setFormData({...formdata,[e.target.name]:e.target.value});
+        setErrorData({...errorData,[e.target.name]:false});
     };
-    const handleSubmit = (event: any) => {
+    const handleSubmit =  (event: any) => {
         event.preventDefault();
 
-        setEmailError(false);
-        setPasswordError(false);
+        let temp : ErrorForm = {email:false,password:false,mobilenumber:false}
+        if (formdata.email === "") {
+            temp = {...temp,email:true};
+        }
+       
+        if (formdata.password === "" ) {
+            temp = {...temp,password:true};
+        }
+        if (formdata.mobilenumber === "" || formdata.mobilenumber.length !== 10) {
+            temp = {...temp,mobilenumber:true};
+        }
 
-        if (email === "") {
-            setEmailError(true);
-        }
-        if (password === "") {
-            setPasswordError(true);
-        }
-        if (mobilenumber === "") {
-            setMobilenumberError(true);
-        }
-        if (email && password && mobilenumber) {
-            let details: {
-                email: string;
-                password: string;
-                mobilenumber: string;
-            } = {
-                email: email,
-                password: password,
-                mobilenumber: mobilenumber,
+        setErrorData(temp);
+       
+        if (formdata.email && formdata.password && formdata.mobilenumber) {
+            let details: FormData = {
+                email: formdata.email,
+                password: formdata.password,
+                mobilenumber: formdata.mobilenumber,
             };
-            let jsonobj = JSON.stringify(details);
+            let jsonobj = JSON.stringify({email:details?.email,mobilenumber:details?.mobilenumber});
             localStorage.setItem("userdetails", jsonobj);
-
-            navigate("/post");
+            navigate("/home");
         }
+        console.log(errorData)
     };
-
+    useEffect(() => {
+        if (localStorage.getItem("userdetails")) {
+            navigate("/home");
+        }
+    }, []);
     return (
         <React.Fragment>
             <Box
@@ -94,8 +98,8 @@ const Login = () => {
                             type="email"
                             sx={{ mb: 2 }}
                             fullWidth
-                            value={email}
-                            error={emailError}
+                            value={formdata.email}
+                            error={errorData.email}
                         />
                         <TextField
                             placeholder="Mobile.No"
@@ -104,8 +108,8 @@ const Login = () => {
                             type="number"
                             fullWidth
                             name="mobilenumber"
-                            value={mobilenumber}
-                            error={mobilenumbererror}
+                            value={formdata.mobilenumber}
+                            error={errorData.mobilenumber}
                             sx={{
                                 mb: 3,
                             }}
@@ -117,8 +121,8 @@ const Login = () => {
                             color="secondary"
                             type="password"
                             name="password"
-                            value={password}
-                            error={passwordError}
+                            value={formdata.password}
+                            error={errorData.password}
                             fullWidth
                             sx={{ mb: 3 }}
                         />
