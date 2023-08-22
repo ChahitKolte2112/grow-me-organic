@@ -132,7 +132,7 @@ const Department = () => {
 
     return (
         <>
-            <Box>
+            <Box >
                 {
                     <div
                         style={{
@@ -148,26 +148,23 @@ const Department = () => {
                                         <div
                                             key={idx}
                                             style={{
-                                                marginBottom: "30px",
+                                                marginBottom: "10px",
                                             }}
                                         >
-                                            <div style={{ display: "flex" }}>
-                                                <img
-                                                    src={`${value.open}=== true ? ${uparrow}:${downarrow}`}
-                                                    style={{
-                                                        width: "20px",
-                                                        height: "20px",
-                                                        marginBottom: "-30px",
-
-                                                        cursor: "pointer",
-                                                    }}
-                                                    alt="loading"
-                                                    onClick={() => {
-                                                        handleOpen(idx);
-                                                    }}
-                                                />{" "}
+                                            <div
+                                                style={{ display: "flex",alignItems:"center" }}
+                                                onClick={() => {
+                                                    handleOpen(idx);
+                                                }}
+                                            >
+                                                <div style={{border:"solid 1px gray",cursor:"pointer", color:"gray",padding:"2px",display:"flex",alignItems:"center"}}>
+                                                {!value.open ? (
+                                                    <i className="fa-solid fa-plus"></i>
+                                                ) : (
+                                                    <i className="fa-solid fa-minus"></i>
+                                                )}</div>
                                                 <Checkbox
-                                                    sx={{ marginTop: "-10px" }}
+                                                   
                                                     checked={value?.parent}
                                                     onChange={() =>
                                                         parentClickHandler(
@@ -179,7 +176,7 @@ const Department = () => {
                                                 <p
                                                     style={{
                                                         cursor: "pointer",
-                                                        marginTop: "0px",
+                                                        marginTop: "20px",
                                                     }}
                                                 >
                                                     {value?.department}

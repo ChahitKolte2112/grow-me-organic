@@ -70,10 +70,11 @@ const Login = () => {
             >
                 <Box
                     sx={{
-                        border: "2px solid black",
                         borderRadius: "10px",
                         padding: "25px",
                         backgroundColor: "white",
+                        zIndex: "100px",
+                        boxShadow: "1px 1px 10px 0px",
                     }}
                 >
                     <form autoComplete={"off"} onSubmit={handleSubmit}>
