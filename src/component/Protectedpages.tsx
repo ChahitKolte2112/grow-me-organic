@@ -5,7 +5,7 @@ const Protectedpages = (prop: any) => {
     useEffect(() => {
         if (localStorage.getItem("userdetails")) {
         } else {
-            navigate("/");
+            navigate("/?redirect=home");
         }
     }, []);
 

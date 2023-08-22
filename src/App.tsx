@@ -1,10 +1,8 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-
-import Posts from "./pages/Home";
+import Home from "./pages/Home";
 import Protectedpages from "./component/Protectedpages";
-import Spinner from "./component/Spinner";
 function App() {
     return (
         <>
@@ -14,13 +12,12 @@ function App() {
                         path="/home"
                         element={
                             <Protectedpages>
-                                <Posts />
+                                <Home />
                             </Protectedpages>
                         }
                     />
                     <Route path="/" element={<Login />} />
-                    <Route path="/spinner" element={<Spinner />} />
-                
+                    <Route path="/*" element={<h1>404 Page Not Found</h1>}/>
                 </Routes>
             </BrowserRouter>
         </>

@@ -41,17 +41,15 @@ const Home = () => {
             const result: any = await axios.get(
                 "https://jsonplaceholder.typicode.com/posts"
             );
-            console.log(result);
             setData(result?.data);
             setload(false);
         };
         fetchData();
         
         if(localStorage.getItem("userdetails")){
-        const obj :any= localStorage.getItem("userdetails");
-        const temp: any = JSON.parse(obj);
-        setDetails(temp);
-        console.log(details)
+            const obj :any= localStorage.getItem("userdetails");
+            const temp: any = JSON.parse(obj);
+            setDetails(temp);
         }
     }, []);
 

@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { TextField, Button, Box } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useSearchParams } from "react-router-dom";
 import { Person,ErrorForm } from "../utils/interfaces";
 
 const Login = () => {
@@ -15,6 +15,10 @@ const Login = () => {
         name: false,
         mobilenumber: false,
     });
+
+    const [searchParams,setSearchParams] = useSearchParams();
+
+
 
     const changeHandler = (e: any) => {
         setFormData({ ...formdata, [e.target.name]: e.target.value });
@@ -52,7 +56,15 @@ const Login = () => {
             
             let jsonobj = JSON.stringify(formdata);
             localStorage.setItem("userdetails", jsonobj);
-            navigate("/home");
+           
+            if(searchParams?.get("redirect")){
+                let t : any = {'redirect':searchParams?.get("redirect")}
+                t  = JSON.stringify(t);
+                setSearchParams(t);
+                navigate(`/${searchParams?.get("redirect")}`);
+            }else{
+                navigate("/home")
+            }
         }
     };
     useEffect(() => {
@@ -62,6 +74,7 @@ const Login = () => {
     }, []);
     return (
         <>
+           
             <Box
                 sx={{
                     display: "flex",
@@ -71,6 +84,7 @@ const Login = () => {
                     backgroundColor: "#f8f4f3",
                 }}
             >
+            
                 <Box
                     sx={{
                         borderRadius: "10px",
@@ -87,7 +101,7 @@ const Login = () => {
                                 textAlign: "center",
                             }}
                         >
-                            Details{" "}
+                           Register here !!!
                         </h2>
                         <TextField
                             placeholder="Name"
@@ -138,9 +152,15 @@ const Login = () => {
                         <div
                             style={{
                                 display: "flex",
+                                flexDirection:"column",
+                                alignItems:"center",
                                 justifyContent: "flex-end",
                             }}
                         >
+                            {
+                                searchParams?.get("redirect") &&  <p style={{color:"red"}}>Please register here to access the page</p>
+                            }
+                           
                             <Button
                                 sx={{
                                     marginTop: 1,
@@ -156,7 +176,7 @@ const Login = () => {
                                 variant="contained"
                                 type="submit"
                             >
-                                Submit Details
+                                Submit
                             </Button>
                         </div>
                     </form>
