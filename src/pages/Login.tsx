@@ -3,7 +3,18 @@ import { TextField, Button, Box } from "@mui/material";
 import {useNavigate, useSearchParams } from "react-router-dom";
 import { Person,ErrorForm } from "../utils/interfaces";
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+
 const Login = () => {
+    const [searchParams,setSearchParams] = useSearchParams();
+
+    const [open, setOpen] = useState(searchParams?.get("redirect") ? true : false);
     const navigate = useNavigate();
     const [formdata, setFormData] = useState<Person>({
         email: "",
@@ -15,8 +26,15 @@ const Login = () => {
         name: false,
         mobilenumber: false,
     });
+    const handleClose = () => {
+        setOpen(false);
+    };
 
-    const [searchParams,setSearchParams] = useSearchParams();
+
+   
+
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
 
 
@@ -157,10 +175,6 @@ const Login = () => {
                                 justifyContent: "flex-end",
                             }}
                         >
-                            {
-                                searchParams?.get("redirect") &&  <p style={{color:"red"}}>Please register here to access the page</p>
-                            }
-                           
                             <Button
                                 sx={{
                                     marginTop: 1,
@@ -181,6 +195,25 @@ const Login = () => {
                         </div>
                     </form>
                 </Box>
+
+                <Dialog
+        fullScreen={fullScreen}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        
+        <DialogContent>
+          <DialogContentText sx={{color:"red"}}>
+             Please register here to access the page
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
             </Box>
         </>
     );

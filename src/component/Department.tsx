@@ -124,7 +124,7 @@ const Department = () => {
 
     return (
         <>
-            <Box sx={{width:"100%"}} >
+            <Box sx={{width:"100%",marginBottom:"100px"}} >
                 {
                     <div
                         style={{

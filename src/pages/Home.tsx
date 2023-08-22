@@ -87,7 +87,7 @@ const Home = () => {
             >
                 <Box
                     sx={{
-                        height: "370px",
+                        height: "500px",
                         width: "60%",
                     }}
                 >
@@ -102,10 +102,11 @@ const Home = () => {
                                 },
                             },
                         }}
+                        sx={{cursor:"pointer"}}
                         showColumnVerticalBorder
                         showCellVerticalBorder
+                        rowHeight={75}
                         loading={load}
-                        pageSizeOptions={[5]}
                         disableRowSelectionOnClick
                     />
                 </Box>
