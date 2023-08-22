@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
-import uparrow from "../assets/uparrow.png";
-import downarrow from "../assets/downarrow.png";
 interface DepartmentType {
     department: string;
     sub_departments: string[];
@@ -31,10 +29,6 @@ const Department = () => {
     const [departmentCheckBox, setDepartmentCheckBox] = useState<
         DepartmentCheck[]
     >([]);
-
-    const [tampo, setTampo] = useState<boolean>(false);
-    const [departmentData, setDepartmenData] = useState<DepartmentType[]>(data);
-    const [open, setOpen] = useState<boolean>(false);
     useEffect(() => {
         const initBool = () => {
             let temp: DepartmentCheck[] = [];
@@ -55,8 +49,6 @@ const Department = () => {
             setDepartmentCheckBox(temp);
         };
         initBool();
-
-        setTampo(true);
     }, []);
 
     const parentClickHandler = (idx: number, prev: boolean) => {
